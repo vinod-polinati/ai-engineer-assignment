@@ -91,7 +91,7 @@ def format_transcript(session_id, warmup_log, interview_log, final_summary):
 st.set_page_config(page_title="Excel AI Interviewer", page_icon="🧠", layout="centered")
 st.title("🧠 Excel Mock Interview")
 
-# --- Session State ---
+# --- Session State Initialization ---
 if "session_id" not in st.session_state:
     st.session_state.session_id = str(uuid.uuid4())
 if "stage" not in st.session_state:
@@ -135,7 +135,7 @@ for msg in st.session_state.messages:
     with st.chat_message("user" if msg["sender"] == "user" else "assistant"):
         st.markdown(msg["text"])
 
-# --- Chat Input ---
+# --- Chat Input Handler ---
 prompt = st.chat_input("Type your response here...")
 if prompt and st.session_state.stage != "summary":
     st.session_state.messages.append({"sender": "user", "text": prompt})
@@ -143,11 +143,12 @@ if prompt and st.session_state.stage != "summary":
 
     # --- Interview Logic ---
     if st.session_state.stage == "intro":
-        st.session_state.stage = "warmup"
-        bot_reply = (
-            "Hi! I'm your AI Excel interviewer. Before we begin, "
-            "let's get to know each other a bit.\n\n" + WARMUP_QUESTIONS[0]
-        )
+        with st.spinner("Starting interview..."):
+            st.session_state.stage = "warmup"
+            bot_reply = (
+                "Hi! I'm your AI Excel interviewer. Before we begin, "
+                "let's get to know each other a bit.\n\n" + WARMUP_QUESTIONS[0]
+            )
         st.session_state.messages.append({"sender": "bot", "text": bot_reply})
 
     elif st.session_state.stage == "warmup":
@@ -158,21 +159,17 @@ if prompt and st.session_state.stage != "summary":
         st.session_state.warmup_q += 1
         if st.session_state.warmup_q < len(WARMUP_QUESTIONS):
             bot_reply = WARMUP_QUESTIONS[st.session_state.warmup_q]
-            st.session_state.messages.append({"sender": "bot", "text": bot_reply})
         else:
-            st.session_state.stage = "interview"
-            bot_reply = (
-                "Thanks for sharing! Let's begin the interview.\n\n" + INTERVIEW_QUESTIONS[0]
-            )
-            st.session_state.messages.append({"sender": "bot", "text": bot_reply})
+            with st.spinner("Starting technical interview..."):
+                st.session_state.stage = "interview"
+                bot_reply = "Thanks for sharing! Let's begin the interview.\n\n" + INTERVIEW_QUESTIONS[0]
+        st.session_state.messages.append({"sender": "bot", "text": bot_reply})
 
     elif st.session_state.stage == "interview":
         current_q = st.session_state.current_q
-        # Clarification flow
         if st.session_state.is_clarifying:
             if user_message in FILLER_ANSWERS:
                 bot_reply = "Great! Now could you try answering the question in your own words?"
-                st.session_state.messages.append({"sender": "bot", "text": bot_reply})
             else:
                 st.session_state.is_clarifying = False
                 with st.spinner("Evaluating your answer..."):
@@ -191,8 +188,8 @@ if prompt and st.session_state.stage != "summary":
                     bot_reply = summary
                 else:
                     bot_reply = INTERVIEW_QUESTIONS[st.session_state.current_q]
-                st.session_state.messages.append({"sender": "bot", "text": bot_reply})
-        # Confusion/clarification detection
+            st.session_state.messages.append({"sender": "bot", "text": bot_reply})
+
         elif any(keyword in user_message for keyword in CONFUSION_KEYWORDS):
             st.session_state.is_clarifying = True
             with st.spinner("Let me clarify that question..."):
@@ -203,7 +200,7 @@ if prompt and st.session_state.stage != "summary":
                 )
             bot_reply = f"Sure! Here's a hint:\n\n{explanation}"
             st.session_state.messages.append({"sender": "bot", "text": bot_reply})
-        # Normal evaluation
+
         else:
             with st.spinner("Evaluating your answer..."):
                 eval = evaluate_answer(INTERVIEW_QUESTIONS[current_q], prompt)
@@ -223,7 +220,7 @@ if prompt and st.session_state.stage != "summary":
                 bot_reply = INTERVIEW_QUESTIONS[st.session_state.current_q]
             st.session_state.messages.append({"sender": "bot", "text": bot_reply})
 
-# --- Download Transcript Button ---
+# --- Transcript Download Button ---
 if st.session_state.stage == "summary" and st.session_state.summary:
     transcript = format_transcript(
         st.session_state.session_id,
@@ -232,7 +229,7 @@ if st.session_state.stage == "summary" and st.session_state.summary:
         st.session_state.summary
     )
     st.download_button(
-        label="Download Interview Transcript",
+        label="📄 Download Interview Transcript",
         data=transcript,
         file_name=f"excel_mock_interview_{st.session_state.session_id}.txt",
         mime="text/plain"
