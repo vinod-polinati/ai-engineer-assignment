@@ -10,14 +10,12 @@ Manual Excel interviews are a bottleneck in our hiring process, causing delays a
 I built an AI-powered web app that simulates a real Excel interview. The system asks warm-up and technical questions, evaluates answers using a large language model (LLM), and provides a detailed feedback report. The goal is to save time for senior analysts and ensure consistent, unbiased candidate assessment.
 
 ## 3. System Architecture
-
-```mermaid
+```
 flowchart TD
     A[User (Candidate)] -- Chat UI --> B[Streamlit App (frontend.py)]
     B -- LLM API Calls --> C[Groq API]
     B -- Save Transcript --> D[Downloadable Transcript]
 ```
-
 - **Streamlit App:** All interview logic, LLM calls, state management, and transcript generation are handled in a single file (`frontend.py`).
 - **LLM Service:** The app calls the Groq API directly for answer evaluation, clarification, and feedback.
 - **Transcript:** At the end of the interview, the user can download their transcript as a text file.
