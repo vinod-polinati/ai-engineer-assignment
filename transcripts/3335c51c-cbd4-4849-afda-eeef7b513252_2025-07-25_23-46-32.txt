@@ -1,0 +1,58 @@
+🧠 Excel Mock Interview Transcript
+Session ID: 3335c51c-cbd4-4849-afda-eeef7b513252
+Date: 2025-07-25_23-46-32
+
+=== Warm-up ===
+Q1: Can you briefly introduce yourself?
+A1: I'm Vinod Polinati, a recent B.Tech graduate in AI & Data Science. I've interned at ISRO and Aegion Dynamic, where I worked on real-world machine learning applications - like Retrieval-Augmented Generation systems and deep learning models for logistics optimization. I've also built personal projects in image segmentation, research automation, and cloud-based analytics. I'm comfortable working with Python, ML/DL libraries, cloud platforms like GCP, and tools like Docker and Git. I'm passionate about applying AI to real-world challenges.
+
+Q2: How comfortable are you with using Excel on a daily basis?
+A2: 8
+
+Q3: What kinds of Excel tasks do you typically perform?
+A3: tracking expenses.
+
+=== Technical Interview ===
+Q1: How would you use a VLOOKUP function in Excel?
+A1: idk
+Evaluation: Score: 0/10
+
+The candidate's response, "idk" (which stands for "I don't know"), indicates a complete lack of knowledge or understanding of the VLOOKUP function in Excel. As a basic and commonly used function in Excel, it is expected that a candidate should have at least a basic understanding of how to use VLOOKUP. The candidate's failure to provide any information or attempt to answer the question results in a score of 0.
+
+Q2: Explain the difference between absolute and relative cell references.
+A2: idk
+Evaluation: Score: 0/10
+
+The candidate's response, "idk" (short for "I don't know"), indicates a complete lack of knowledge or understanding of the concept of absolute and relative cell references in Excel. This is a fundamental concept in Excel, and a candidate who claims to have Excel skills should be able to provide a clear and concise explanation of the difference between the two. The candidate's failure to do so suggests a significant gap in their knowledge and earns them a score of 0.
+
+Q3: How do pivot tables help in data analysis?
+A3: idk
+Evaluation: Score: 0
+
+The candidate's response of "idk" (which stands for "I don't know") indicates a complete lack of knowledge or understanding of pivot tables and their role in data analysis. A competent candidate should be able to provide a clear explanation of how pivot tables can help summarize, organize, and analyze large datasets, making this answer unacceptable.
+
+Q4: Can you describe how to use conditional formatting effectively?
+A4: idk
+Evaluation: Score: 0
+
+The candidate's response of "idk" (short for "I don't know") indicates a complete lack of knowledge or willingness to attempt to answer the question about conditional formatting in Excel. This suggests that the candidate has not prepared for the interview or does not have basic knowledge of Excel features, making them unqualified for a position that requires Excel skills.
+
+Q5: What’s the purpose of using named ranges in Excel?
+A5: idk
+Evaluation: I would give this answer a score of 0 out of 10. The candidate's response of "idk" (short for "I don't know") indicates a complete lack of knowledge or understanding of named ranges in Excel, which is a fundamental concept in Excel. A more acceptable response would be to explain that named ranges are used to make formulas more readable and easier to understand by assigning a descriptive name to a cell or range of cells, rather than using a cell reference. The candidate's brief and uninformative response suggests a lack of preparation or familiarity with basic Excel concepts.
+
+=== Final Feedback ===
+**Summary of the Candidate's Performance:**
+
+The candidate's performance in the Excel mock interview session was extremely poor. Here's a breakdown of their strengths, weaknesses, and overall impression:
+
+**Strengths:** None. The candidate did not demonstrate any knowledge or understanding of basic Excel concepts, and their responses did not show any redeeming qualities.
+
+**Weaknesses:**
+
+1. **Lack of knowledge**: The candidate demonstrated a complete lack of knowledge and understanding of fundamental Excel concepts, including VLOOKUP, absolute and relative cell references, pivot tables, conditional formatting, and named ranges.
+2. **Failure to attempt answers**: The candidate did not attempt to provide any meaningful responses to the questions, instead relying on the phrase "idk" (I don't know) for every question.
+3. **Unpreparedness**: The candidate's performance suggests that they were not prepared for the interview and did not have a basic understanding of Excel features and concepts.
+
+**Overall Impression:**
+The candidate's performance was unacceptable, and they failed to demonstrate even a basic understanding of Excel concepts. Their lack of knowledge, failure to attempt answers, and unpreparedness suggest that they are not qualified for a position that requires Excel skills. The candidate's score of 0 out of 10 for every question is a clear indication that they need significant training and practice to develop their Excel skills before they can be considered for a role that requires proficiency in Excel. Overall, the candidate's performance was disappointing and unimpressive.
