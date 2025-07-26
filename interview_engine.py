@@ -1,6 +1,6 @@
 from llm_service import ask_llm, evaluate_answer, generate_feedback
 from prompts import INTERVIEW_QUESTIONS
-from save_transcript import save_chat_transcript  # ✅ added
+from save_transcript import save_chat_transcript  # added
 
 FILLER_ANSWERS = [
     "okay", "ok", "i get it", "yeah i get it", "got it", "makes sense",
@@ -36,7 +36,7 @@ class InterviewEngine:
         session = self.sessions[session_id]
         user_message = message.strip().lower()
 
-        # 🟡 Step 1: Intro
+        # Step 1: Intro
         if session["stage"] == "intro":
             session["stage"] = "warmup"
             return (
@@ -45,7 +45,7 @@ class InterviewEngine:
                 WARMUP_QUESTIONS[0]
             )
 
-        # 🟠 Step 2: Warmup
+        # Step 2: Warmup
         elif session["stage"] == "warmup":
             session["warmup_log"].append({
                 "question": WARMUP_QUESTIONS[session["warmup_q"]],
@@ -58,7 +58,7 @@ class InterviewEngine:
                 session["stage"] = "interview"
                 return f"Thanks for sharing! Let's begin the interview.\n\n{INTERVIEW_QUESTIONS[0]}"
 
-        # 🧠 Step 3: Interview
+        # Step 3: Interview
         elif session["stage"] == "interview":
             current_q = session["current_q"]
 
@@ -76,7 +76,7 @@ class InterviewEngine:
                 if session["current_q"] >= len(INTERVIEW_QUESTIONS):
                     session["stage"] = "summary"
                     summary = await generate_feedback(session["answers"])
-                    # 💾 Save transcript
+                    # Save transcript
                     save_chat_transcript(
                         session_id=session_id,
                         warmup_log=session.get("warmup_log", []),
@@ -90,10 +90,7 @@ class InterviewEngine:
             if any(keyword in user_message for keyword in CONFUSION_KEYWORDS):
                 session["is_clarifying"] = True
                 explanation = await ask_llm(
-                    f"""You're an Excel interviewer.
-A candidate is confused by this question: "{INTERVIEW_QUESTIONS[current_q]}"
-Give a short clarification or rephrasing — do not give the full answer.
-"""
+                    f"""You are an Excel interviewer.\nA candidate is confused by this question: \"{INTERVIEW_QUESTIONS[current_q]}\"\nGive a short clarification or rephrasing -- do not give the full answer.\n"""
                 )
                 return f"Sure! Here's a hint:\n\n{explanation}"
 
@@ -108,7 +105,7 @@ Give a short clarification or rephrasing — do not give the full answer.
             if session["current_q"] >= len(INTERVIEW_QUESTIONS):
                 session["stage"] = "summary"
                 summary = await generate_feedback(session["answers"])
-                # 💾 Save transcript
+                # Save transcript
                 save_chat_transcript(
                     session_id=session_id,
                     warmup_log=session.get("warmup_log", []),
@@ -119,8 +116,8 @@ Give a short clarification or rephrasing — do not give the full answer.
             else:
                 return INTERVIEW_QUESTIONS[session["current_q"]]
 
-        # ✅ Step 4: Done
+        # Step 4: Done
         elif session["stage"] == "summary":
-            return "✅ Interview completed. Click 🔄 to restart."
+            return "Interview completed. Click restart to begin again."
 
-        return "⚠️ Unexpected error. Please refresh."
+        return "Unexpected error. Please refresh."
