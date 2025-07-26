@@ -5,3 +5,4 @@ httpx
 streamlit
 requests
 streamlit-chat
+fpdf

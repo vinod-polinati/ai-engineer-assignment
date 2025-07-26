@@ -7,22 +7,22 @@ Manual Excel interviews are a bottleneck in our hiring process, causing delays a
 
 ## 2. Solution Overview
 
-I built an AI-powered web app that simulates a real Excel interview. The system consists of a FastAPI backend for interview logic and a Streamlit frontend for the user interface. The system asks warm-up and technical questions, evaluates answers using a large language model (LLM), and provides a detailed feedback report. The goal is to save time for senior analysts and ensure consistent, unbiased candidate assessment.
+I built an AI-powered web app that simulates a real Excel interview. The system consists of a FastAPI backend for interview logic and a React frontend for the user interface. The system asks warm-up and technical questions, evaluates answers using a large language model (LLM), and provides a detailed feedback report with automatic PDF transcript generation. The goal is to save time for senior analysts and ensure consistent, unbiased candidate assessment.
 
 ## 3. System Architecture
 ```
 flowchart TD
-    A[User (Candidate)] -- Chat UI --> B[Streamlit Frontend (frontend.py)]
+    A[User (Candidate)] -- Chat UI --> B[React Frontend (frontend-react/)]
     B -- HTTP Requests --> C[FastAPI Backend (main.py)]
     C -- Interview Logic --> D[Interview Engine (interview_engine.py)]
     D -- LLM API Calls --> E[Groq API]
-    D -- Save Transcript --> F[Local File System]
+    D -- Save Transcript --> F[PDF Files]
 ```
-- **Streamlit Frontend (`frontend.py`):** Provides a user-friendly chat interface with session management and restart functionality.
+- **React Frontend (`frontend-react/`):** Modern, minimal dark-mode chat interface built with React and TypeScript.
 - **FastAPI Backend (`main.py`):** RESTful API that handles chat requests and manages interview sessions.
 - **Interview Engine (`interview_engine.py`):** Core interview logic, question flow, answer evaluation, and transcript generation.
 - **LLM Service (`llm_service.py`):** Handles communication with the Groq API for answer evaluation and feedback generation.
-- **Transcript Storage:** Interview transcripts are saved locally with unique session IDs.
+- **PDF Transcript Storage:** Interview transcripts are automatically saved as PDF files with unique session IDs.
 
 ## 4. Interview Flow
 
@@ -32,41 +32,50 @@ flowchart TD
 4. **Clarification:** If the candidate is confused, the bot provides hints (not answers).
 5. **Evaluation:** Each answer is scored and explained by the LLM.
 6. **Summary:** At the end, the bot gives a feedback report (strengths, weaknesses, overall impression).
-7. **Transcript:** The full interview is automatically saved to the local file system.
+7. **PDF Transcript:** The full interview is automatically saved as a PDF file.
 
 ## 5. Technology Stack & Justification
 
 - **FastAPI:**  
   *Provides a robust, high-performance backend API with automatic documentation and type validation. Handles concurrent requests efficiently.*
-- **Streamlit:**  
-  *Offers a user-friendly chat interface with built-in session management and easy deployment options.*
+- **React + TypeScript:**  
+  *Modern, responsive frontend with type safety and excellent developer experience. Minimal dark-mode design for professional appearance.*
 - **LLM Provider:** Groq API (Llama-3)  
   *Provides high-quality language understanding and generation for answer evaluation and feedback. The API key is managed securely using environment variables.*
-- **Transcript Storage:** Local file system  
-  *Interview transcripts are automatically saved with unique session IDs for record-keeping and analysis.*
+- **PDF Generation:** FPDF  
+  *Automatically generates professional PDF transcripts of each interview session for record-keeping and analysis.*
 
 ## 6. Key Features
 
+- **Modern Chat Interface:** Clean, minimal dark-mode React frontend with real-time messaging.
 - **Conversational AI:** Simulates a real interview with multi-turn dialogue.
 - **Dynamic Evaluation:** Uses LLM to score and explain answers.
 - **Clarification:** Detects confusion and provides hints.
 - **Session Management:** Each interview is tracked by a unique session ID.
 - **Feedback Report:** Summarizes candidate performance at the end.
-- **Automatic Transcript Saving:** All interviews are automatically saved for transparency and analysis.
+- **Automatic PDF Generation:** All interviews are automatically saved as PDF transcripts.
 - **Restart Functionality:** Users can restart the interview at any time.
+- **Responsive Design:** Works seamlessly on desktop and mobile devices.
 
 ## 7. Project Structure
 
 ```
 ai-engineer-assignment/
 ├── main.py                 # FastAPI backend server
-├── frontend.py             # Streamlit frontend interface
+├── frontend.py             # Legacy Streamlit frontend (optional)
 ├── interview_engine.py     # Core interview logic
 ├── llm_service.py          # LLM API communication
 ├── prompts.py              # Interview questions and prompts
-├── save_transcript.py      # Transcript saving functionality
+├── save_transcript.py      # PDF transcript generation
 ├── requirements.txt        # Python dependencies
-├── transcripts/            # Saved interview transcripts
+├── transcripts/            # Saved PDF interview transcripts
+├── frontend-react/         # React frontend application
+│   ├── src/
+│   │   ├── App.tsx         # Main React component
+│   │   ├── App.css         # Dark mode styling
+│   │   └── index.tsx       # React entry point
+│   ├── package.json        # Node.js dependencies
+│   └── README.md           # Frontend documentation
 └── Readme.md              # This documentation
 ```
 
@@ -74,11 +83,12 @@ ai-engineer-assignment/
 
 ### Prerequisites
 - Python 3.8+
+- Node.js 16+
 - Groq API key
 
-### Installation Steps
+### Backend Setup
 1. Clone the repository
-2. Install dependencies:
+2. Install Python dependencies:
    ```bash
    pip install -r requirements.txt
    ```
@@ -90,12 +100,31 @@ ai-engineer-assignment/
    ```bash
    uvicorn main:app --reload --host 0.0.0.0 --port 8000
    ```
-5. Start the Streamlit frontend (in a new terminal):
-   ```bash
-   streamlit run frontend.py
-   ```
 
-## 9. Cold Start & Improvement Plan
+### Frontend Setup
+1. Navigate to the React frontend directory:
+   ```bash
+   cd frontend-react
+   ```
+2. Install Node.js dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the React development server:
+   ```bash
+   npm start
+   ```
+4. Open [http://localhost:3000](http://localhost:3000) to view the application.
+
+## 9. Usage
+
+1. The React frontend will automatically connect to your FastAPI backend
+2. Type your responses in the input field and press Enter or click Send
+3. The AI interviewer will guide you through the Excel interview process
+4. Use the "Restart Interview" button to start a new session
+5. PDF transcripts are automatically generated and saved in the `transcripts/` directory
+
+## 10. Cold Start & Improvement Plan
 
 - **Cold Start:**  
   The system does not require any pre-existing dataset. It uses LLMs, which are already trained on general Excel knowledge.
@@ -105,24 +134,24 @@ ai-engineer-assignment/
   - Fine-tune the LLM or build a custom evaluation model using collected data.
   - Add more advanced Excel scenarios (e.g., file uploads, formula debugging).
   - Implement user authentication and persistent session storage.
+  - Add admin dashboard for interview analytics.
 
-## 10. Deployment Plan
+## 11. Deployment Plan
 
 ### Local Development
-- Run both FastAPI backend and Streamlit frontend locally as described in the setup section.
+- Run both FastAPI backend and React frontend locally as described in the setup section.
 
 ### Production Deployment
 - **Backend:** Deploy FastAPI app to cloud platforms (AWS, GCP, Azure) or containerized deployment.
-- **Frontend:** Deploy Streamlit app to Streamlit Cloud or similar platforms.
+- **Frontend:** Build React app (`npm run build`) and deploy to static hosting (Vercel, Netlify, AWS S3).
 - **Database:** Add persistent session storage (PostgreSQL, MongoDB).
 - **Secrets Management:** Use cloud platform secrets management for API keys.
 
-## 11. Limitations & Future Work
+## 12. Limitations & Future Work
 
 - **No user authentication** (MVP only).
 - **Session state is in-memory** and not persistent across server restarts.
 - **LLM cost and latency** (depends on API provider).
-- **UI is basic** (can be improved for production).
 - **No database integration** for persistent storage.
 
 ### Future Enhancements
@@ -132,5 +161,7 @@ ai-engineer-assignment/
 - Create admin dashboard for interview analytics
 - Add video/audio interview capabilities
 - Implement A/B testing for different question sets
+- Add real-time collaboration features
+- Integrate with HR systems for seamless candidate management
 
 --- 
