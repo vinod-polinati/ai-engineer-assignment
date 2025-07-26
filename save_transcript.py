@@ -1,28 +1,47 @@
 import os
 from datetime import datetime
+from fpdf import FPDF
 
 def save_chat_transcript(session_id, warmup_log, interview_log, final_summary):
     os.makedirs("transcripts", exist_ok=True)
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    filename = f"transcripts/{session_id}_{timestamp}.txt"
+    filename = f"transcripts/{session_id}_{timestamp}.pdf"
 
-    with open(filename, "w", encoding="utf-8") as f:
-        f.write(f"🧠 Excel Mock Interview Transcript\n")
-        f.write(f"Session ID: {session_id}\n")
-        f.write(f"Date: {timestamp}\n\n")
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.set_font("Arial", 'B', 16)
+    pdf.cell(0, 10, "🧠 Excel Mock Interview Transcript", ln=True, align="C")
+    pdf.ln(5)
+    pdf.set_font("Arial", '', 12)
+    pdf.cell(0, 10, f"Session ID: {session_id}", ln=True)
+    pdf.cell(0, 10, f"Date: {timestamp}", ln=True)
+    pdf.ln(5)
 
-        f.write("=== Warm-up ===\n")
-        for i, qa in enumerate(warmup_log):
-            f.write(f"Q{i+1}: {qa['question']}\n")
-            f.write(f"A{i+1}: {qa['answer']}\n\n")
+    # Warm-up Section
+    pdf.set_font("Arial", 'B', 14)
+    pdf.cell(0, 10, "=== Warm-up ===", ln=True)
+    pdf.set_font("Arial", '', 12)
+    for i, qa in enumerate(warmup_log):
+        pdf.multi_cell(0, 8, f"Q{i+1}: {qa['question']}")
+        pdf.multi_cell(0, 8, f"A{i+1}: {qa['answer']}")
+        pdf.ln(2)
 
-        f.write("=== Technical Interview ===\n")
-        for i, qa in enumerate(interview_log):
-            f.write(f"Q{i+1}: {qa['question']}\n")
-            f.write(f"A{i+1}: {qa['answer']}\n")
-            f.write(f"Evaluation: {qa['evaluation']}\n\n")
+    # Technical Interview Section
+    pdf.set_font("Arial", 'B', 14)
+    pdf.cell(0, 10, "=== Technical Interview ===", ln=True)
+    pdf.set_font("Arial", '', 12)
+    for i, qa in enumerate(interview_log):
+        pdf.multi_cell(0, 8, f"Q{i+1}: {qa['question']}")
+        pdf.multi_cell(0, 8, f"A{i+1}: {qa['answer']}")
+        pdf.multi_cell(0, 8, f"Evaluation: {qa['evaluation']}")
+        pdf.ln(2)
 
-        f.write("=== Final Feedback ===\n")
-        f.write(final_summary + "\n")
+    # Final Feedback Section
+    pdf.set_font("Arial", 'B', 14)
+    pdf.cell(0, 10, "=== Final Feedback ===", ln=True)
+    pdf.set_font("Arial", '', 12)
+    pdf.multi_cell(0, 8, final_summary)
 
+    pdf.output(filename)
     return filename
