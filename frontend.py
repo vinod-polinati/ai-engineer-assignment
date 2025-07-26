@@ -7,11 +7,10 @@ st.title("🧠 Excel Mock Interview")
 
 API_URL = "http://localhost:8000/chat"
 
-# 🔄 Session ID setup
 if "session_id" not in st.session_state:
     st.session_state.session_id = str(uuid.uuid4())
 
-SESSION_ID = st.session_state.session_id
+SESSION_ID = st.session_state.session_id 
 
 # 🔁 Restart button
 if st.button("🔄 Restart Interview"):
