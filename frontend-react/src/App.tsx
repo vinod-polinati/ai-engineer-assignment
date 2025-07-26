@@ -36,18 +36,40 @@ function App() {
     setMessages(prev => [...prev, { sender: 'user', text: userMessage }]);
 
     try {
+      console.log('Sending request to:', 'https://ai-engineer-assignment.onrender.com/chat');
+      console.log('Request data:', { session_id: sessionId, message: userMessage });
+      
       const response = await axios.post('https://ai-engineer-assignment.onrender.com/chat', {
         session_id: sessionId,
         message: userMessage
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        timeout: 30000 // 30 second timeout
       });
 
+      console.log('Response received:', response.data);
       const botReply = response.data.response;
       setMessages(prev => [...prev, { sender: 'bot', text: botReply }]);
-    } catch (error) {
-      console.error('Error:', error);
+    } catch (error: any) {
+      console.error('Error details:', error);
+      console.error('Error response:', error.response?.data);
+      console.error('Error status:', error.response?.status);
+      
+      let errorMessage = 'Sorry, there was an error. Please try again.';
+      
+      if (error.response?.status === 429) {
+        errorMessage = 'Too many requests. Please wait a moment and try again.';
+      } else if (error.code === 'ECONNABORTED') {
+        errorMessage = 'Request timed out. Please try again.';
+      } else if (error.response?.status >= 500) {
+        errorMessage = 'Server error. Please try again in a moment.';
+      }
+      
       setMessages(prev => [...prev, { 
         sender: 'bot', 
-        text: 'Sorry, there was an error. Please try again.' 
+        text: errorMessage 
       }]);
     } finally {
       setIsLoading(false);

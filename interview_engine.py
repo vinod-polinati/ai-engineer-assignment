@@ -76,13 +76,17 @@ class InterviewEngine:
                 if session["current_q"] >= len(INTERVIEW_QUESTIONS):
                     session["stage"] = "summary"
                     summary = await generate_feedback(session["answers"])
-                    # Save transcript
-                    save_chat_transcript(
-                        session_id=session_id,
-                        warmup_log=session.get("warmup_log", []),
-                        interview_log=session["answers"],
-                        final_summary=summary
-                    )
+                    # Save transcript with error handling
+                    try:
+                        save_chat_transcript(
+                            session_id=session_id,
+                            warmup_log=session.get("warmup_log", []),
+                            interview_log=session["answers"],
+                            final_summary=summary
+                        )
+                    except Exception as e:
+                        print(f"Error saving transcript: {e}")
+                        # Continue even if transcript saving fails
                     return summary
                 else:
                     return INTERVIEW_QUESTIONS[session["current_q"]]
@@ -105,13 +109,17 @@ class InterviewEngine:
             if session["current_q"] >= len(INTERVIEW_QUESTIONS):
                 session["stage"] = "summary"
                 summary = await generate_feedback(session["answers"])
-                # Save transcript
-                save_chat_transcript(
-                    session_id=session_id,
-                    warmup_log=session.get("warmup_log", []),
-                    interview_log=session["answers"],
-                    final_summary=summary
-                )
+                # Save transcript with error handling
+                try:
+                    save_chat_transcript(
+                        session_id=session_id,
+                        warmup_log=session.get("warmup_log", []),
+                        interview_log=session["answers"],
+                        final_summary=summary
+                    )
+                except Exception as e:
+                    print(f"Error saving transcript: {e}")
+                    # Continue even if transcript saving fails
                 return summary
             else:
                 return INTERVIEW_QUESTIONS[session["current_q"]]
