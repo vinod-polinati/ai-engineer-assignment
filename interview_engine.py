@@ -76,7 +76,7 @@ class InterviewEngine:
                 if session["current_q"] >= len(INTERVIEW_QUESTIONS):
                     session["stage"] = "summary"
                     summary = await generate_feedback(session["answers"])
-                    # Save transcript with error handling
+                    # Try to save transcript but don't let it block the response
                     try:
                         save_chat_transcript(
                             session_id=session_id,
@@ -85,8 +85,7 @@ class InterviewEngine:
                             final_summary=summary
                         )
                     except Exception as e:
-                        print(f"Error saving transcript: {e}")
-                        # Continue even if transcript saving fails
+                        print(f"PDF generation failed (non-critical): {e}")
                     return summary
                 else:
                     return INTERVIEW_QUESTIONS[session["current_q"]]
@@ -109,7 +108,7 @@ class InterviewEngine:
             if session["current_q"] >= len(INTERVIEW_QUESTIONS):
                 session["stage"] = "summary"
                 summary = await generate_feedback(session["answers"])
-                # Save transcript with error handling
+                # Try to save transcript but don't let it block the response
                 try:
                     save_chat_transcript(
                         session_id=session_id,
@@ -118,8 +117,7 @@ class InterviewEngine:
                         final_summary=summary
                     )
                 except Exception as e:
-                    print(f"Error saving transcript: {e}")
-                    # Continue even if transcript saving fails
+                    print(f"PDF generation failed (non-critical): {e}")
                 return summary
             else:
                 return INTERVIEW_QUESTIONS[session["current_q"]]
