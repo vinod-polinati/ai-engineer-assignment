@@ -36,7 +36,7 @@ function App() {
     setMessages(prev => [...prev, { sender: 'user', text: userMessage }]);
 
     try {
-      const response = await axios.post('/chat', {
+      const response = await axios.post('https://ai-engineer-assignment.onrender.com/chat', {
         session_id: sessionId,
         message: userMessage
       });
