@@ -14,6 +14,7 @@ function App() {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId] = useState(() => crypto.randomUUID());
+  const [interviewCompleted, setInterviewCompleted] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -52,6 +53,12 @@ function App() {
       console.log('Response received:', response.data);
       const botReply = response.data.response;
       setMessages(prev => [...prev, { sender: 'bot', text: botReply }]);
+      
+      // Check if interview is completed
+      if (botReply.includes("Interview completed") || botReply.includes("Overall impression")) {
+        setInterviewCompleted(true);
+      }
+      
     } catch (error: any) {
       console.error('Error details:', error);
       console.error('Error response:', error.response?.data);
@@ -78,6 +85,30 @@ function App() {
 
   const handleRestart = () => {
     setMessages([{ sender: 'bot', text: "Hi, I'm your AI Excel interviewer. Type anything to begin." }]);
+    setInterviewCompleted(false);
+  };
+
+  const handleDownloadTranscript = async () => {
+    try {
+      const response = await axios.get(`https://ai-engineer-assignment.onrender.com/download-transcript/${sessionId}`, {
+        responseType: 'blob',
+        timeout: 30000
+      });
+      
+      // Create a download link
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `excel_interview_transcript_${sessionId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      
+    } catch (error) {
+      console.error('Error downloading transcript:', error);
+      alert('Error downloading transcript. Please try again.');
+    }
   };
 
   return (
@@ -85,9 +116,16 @@ function App() {
       <div className="chat-container">
         <div className="header">
           <h1>Excel Mock Interview</h1>
-          <button onClick={handleRestart} className="restart-btn">
-            Restart Interview
-          </button>
+          <div className="header-buttons">
+            {interviewCompleted && (
+              <button onClick={handleDownloadTranscript} className="download-btn">
+                Download Transcript
+              </button>
+            )}
+            <button onClick={handleRestart} className="restart-btn">
+              Restart Interview
+            </button>
+          </div>
         </div>
         
         <div className="messages">
