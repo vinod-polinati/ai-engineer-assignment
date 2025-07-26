@@ -19,10 +19,10 @@ flowchart TD
     D -- Save Transcript --> F[PDF Files]
 ```
 - **React Frontend (`frontend-react/`):** Modern, minimal dark-mode chat interface built with React and TypeScript.
-- **FastAPI Backend (`main.py`):** RESTful API that handles chat requests and manages interview sessions.
+- **FastAPI Backend (`main.py`):** RESTful API that handles chat requests and manages interview sessions with robust error handling.
 - **Interview Engine (`interview_engine.py`):** Core interview logic, question flow, answer evaluation, and transcript generation.
 - **LLM Service (`llm_service.py`):** Handles communication with the Groq API for answer evaluation and feedback generation.
-- **PDF Transcript Storage:** Interview transcripts are automatically saved as PDF files with unique session IDs.
+- **PDF Transcript Storage:** Interview transcripts are automatically saved as PDF files with comprehensive error handling and fallback mechanisms.
 
 ## 4. Interview Flow
 
@@ -32,18 +32,18 @@ flowchart TD
 4. **Clarification:** If the candidate is confused, the bot provides hints (not answers).
 5. **Evaluation:** Each answer is scored and explained by the LLM.
 6. **Summary:** At the end, the bot gives a feedback report (strengths, weaknesses, overall impression).
-7. **PDF Transcript:** The full interview is automatically saved as a PDF file.
+7. **PDF Transcript:** The full interview is automatically saved as a PDF file with bulletproof error handling.
 
 ## 5. Technology Stack & Justification
 
 - **FastAPI:**  
-  *Provides a robust, high-performance backend API with automatic documentation and type validation. Handles concurrent requests efficiently.*
+  *Provides a robust, high-performance backend API with automatic documentation and type validation. Handles concurrent requests efficiently with comprehensive error handling.*
 - **React + TypeScript:**  
   *Modern, responsive frontend with type safety and excellent developer experience. Minimal dark-mode design for professional appearance.*
 - **LLM Provider:** Groq API (Llama-3)  
   *Provides high-quality language understanding and generation for answer evaluation and feedback. The API key is managed securely using environment variables.*
 - **PDF Generation:** FPDF  
-  *Automatically generates professional PDF transcripts of each interview session for record-keeping and analysis.*
+  *Automatically generates professional PDF transcripts of each interview session with robust error handling and fallback mechanisms.*
 
 ## 6. Key Features
 
@@ -53,28 +53,30 @@ flowchart TD
 - **Clarification:** Detects confusion and provides hints.
 - **Session Management:** Each interview is tracked by a unique session ID.
 - **Feedback Report:** Summarizes candidate performance at the end.
-- **Automatic PDF Generation:** All interviews are automatically saved as PDF transcripts.
+- **Automatic PDF Generation:** All interviews are automatically saved as PDF transcripts with bulletproof error handling.
 - **Restart Functionality:** Users can restart the interview at any time.
 - **Responsive Design:** Works seamlessly on desktop and mobile devices.
+- **Robust Error Handling:** Comprehensive error handling prevents crashes and ensures smooth user experience.
+- **Production Ready:** Successfully deployed and tested in production environment.
 
 ## 7. Project Structure
 
 ```
 ai-engineer-assignment/
-├── main.py                 # FastAPI backend server
+├── main.py                 # FastAPI backend server with CORS support
 ├── frontend.py             # Legacy Streamlit frontend (optional)
-├── interview_engine.py     # Core interview logic
+├── interview_engine.py     # Core interview logic with error handling
 ├── llm_service.py          # LLM API communication
-├── prompts.py              # Interview questions and prompts
-├── save_transcript.py      # PDF transcript generation
-├── requirements.txt        # Python dependencies
+├── prompts.py              # Interview questions and prompts (ASCII-safe)
+├── save_transcript.py      # Bulletproof PDF transcript generation
+├── requirements.txt        # Python dependencies including FPDF
 ├── transcripts/            # Saved PDF interview transcripts
 ├── frontend-react/         # React frontend application
 │   ├── src/
-│   │   ├── App.tsx         # Main React component
+│   │   ├── App.tsx         # Main React component with error handling
 │   │   ├── App.css         # Dark mode styling
 │   │   └── index.tsx       # React entry point
-│   ├── package.json        # Node.js dependencies
+│   ├── package.json        # Node.js dependencies with proxy config
 │   └── README.md           # Frontend documentation
 └── Readme.md              # This documentation
 ```
@@ -123,8 +125,47 @@ ai-engineer-assignment/
 3. The AI interviewer will guide you through the Excel interview process
 4. Use the "Restart Interview" button to start a new session
 5. PDF transcripts are automatically generated and saved in the `transcripts/` directory
+6. The system handles errors gracefully and provides detailed feedback
 
-## 10. Cold Start & Improvement Plan
+## 10. Production Deployment
+
+### Current Deployment
+- **Backend:** Successfully deployed on Render.com at `https://ai-engineer-assignment.onrender.com`
+- **Frontend:** Ready for deployment on Vercel, Netlify, or similar platforms
+- **CORS:** Configured to allow cross-origin requests from frontend domains
+- **Error Handling:** Production-ready with comprehensive error handling and logging
+
+### Deployment Steps
+1. **Backend (Render.com):**
+   - Connect GitHub repository to Render
+   - Set build command: `pip install -r requirements.txt`
+   - Set start command: `uvicorn main:app --host 0.0.0.0 --port 10000`
+   - Add `GROQ_API_KEY` as environment variable
+
+2. **Frontend (Vercel):**
+   - Import GitHub repository to Vercel
+   - Set root directory to `frontend-react`
+   - Deploy automatically
+
+3. **Connect Frontend to Backend:**
+   - Update API URL in `frontend-react/src/App.tsx` to point to your backend URL
+   - Redeploy frontend
+
+## 11. Error Handling & Reliability
+
+### Robust Error Handling
+- **PDF Generation:** Non-blocking with comprehensive fallback mechanisms
+- **API Communication:** Timeout handling and detailed error logging
+- **Text Sanitization:** Automatic removal of non-ASCII characters
+- **Graceful Degradation:** System continues working even if non-critical features fail
+
+### Production Features
+- **CORS Support:** Configured for cross-origin requests
+- **Session Management:** Unique session IDs for each interview
+- **Logging:** Comprehensive error logging for debugging
+- **Fallback Mechanisms:** Text file generation if PDF fails
+
+## 12. Cold Start & Improvement Plan
 
 - **Cold Start:**  
   The system does not require any pre-existing dataset. It uses LLMs, which are already trained on general Excel knowledge.
@@ -135,19 +176,10 @@ ai-engineer-assignment/
   - Add more advanced Excel scenarios (e.g., file uploads, formula debugging).
   - Implement user authentication and persistent session storage.
   - Add admin dashboard for interview analytics.
+  - Implement real-time collaboration features.
+  - Add video/audio interview capabilities.
 
-## 11. Deployment Plan
-
-### Local Development
-- Run both FastAPI backend and React frontend locally as described in the setup section.
-
-### Production Deployment
-- **Backend:** Deploy FastAPI app to cloud platforms (AWS, GCP, Azure) or containerized deployment.
-- **Frontend:** Build React app (`npm run build`) and deploy to static hosting (Vercel, Netlify, AWS S3).
-- **Database:** Add persistent session storage (PostgreSQL, MongoDB).
-- **Secrets Management:** Use cloud platform secrets management for API keys.
-
-## 12. Limitations & Future Work
+## 13. Limitations & Future Work
 
 - **No user authentication** (MVP only).
 - **Session state is in-memory** and not persistent across server restarts.
@@ -163,5 +195,20 @@ ai-engineer-assignment/
 - Implement A/B testing for different question sets
 - Add real-time collaboration features
 - Integrate with HR systems for seamless candidate management
+- Implement advanced analytics and reporting
+- Add multi-language support
+
+## 14. Troubleshooting
+
+### Common Issues
+1. **PDF Generation Errors:** System automatically falls back to text files
+2. **API Timeouts:** Frontend includes 30-second timeout with retry logic
+3. **CORS Issues:** Backend configured to allow requests from common frontend hosts
+4. **Non-ASCII Characters:** Automatic sanitization prevents encoding errors
+
+### Debug Mode
+- Check browser console (F12) for detailed error logs
+- Backend logs include comprehensive error information
+- PDF generation errors are logged but don't crash the system
 
 --- 
