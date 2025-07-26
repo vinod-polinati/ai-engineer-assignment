@@ -1,5 +1,4 @@
 # AI-Powered Excel Mock Interviewer  
-**Design Document**
 
 ## 1. Problem Statement
 
@@ -131,25 +130,9 @@ ai-engineer-assignment/
 
 ### Current Deployment
 - **Backend:** Successfully deployed on Render.com at `https://ai-engineer-assignment.onrender.com`
-- **Frontend:** Ready for deployment on Vercel, Netlify, or similar platforms
+- **Frontend:** Successfully deployed on vercel.com at `https://ai-engineer-assignment.vercel.app/`
 - **CORS:** Configured to allow cross-origin requests from frontend domains
 - **Error Handling:** Production-ready with comprehensive error handling and logging
-
-### Deployment Steps
-1. **Backend (Render.com):**
-   - Connect GitHub repository to Render
-   - Set build command: `pip install -r requirements.txt`
-   - Set start command: `uvicorn main:app --host 0.0.0.0 --port 10000`
-   - Add `GROQ_API_KEY` as environment variable
-
-2. **Frontend (Vercel):**
-   - Import GitHub repository to Vercel
-   - Set root directory to `frontend-react`
-   - Deploy automatically
-
-3. **Connect Frontend to Backend:**
-   - Update API URL in `frontend-react/src/App.tsx` to point to your backend URL
-   - Redeploy frontend
 
 ## 11. Error Handling & Reliability
 
@@ -185,30 +168,5 @@ ai-engineer-assignment/
 - **Session state is in-memory** and not persistent across server restarts.
 - **LLM cost and latency** (depends on API provider).
 - **No database integration** for persistent storage.
-
-### Future Enhancements
-- Add user authentication and role-based access
-- Implement persistent session storage with database
-- Add more sophisticated Excel question types
-- Create admin dashboard for interview analytics
-- Add video/audio interview capabilities
-- Implement A/B testing for different question sets
-- Add real-time collaboration features
-- Integrate with HR systems for seamless candidate management
-- Implement advanced analytics and reporting
-- Add multi-language support
-
-## 14. Troubleshooting
-
-### Common Issues
-1. **PDF Generation Errors:** System automatically falls back to text files
-2. **API Timeouts:** Frontend includes 30-second timeout with retry logic
-3. **CORS Issues:** Backend configured to allow requests from common frontend hosts
-4. **Non-ASCII Characters:** Automatic sanitization prevents encoding errors
-
-### Debug Mode
-- Check browser console (F12) for detailed error logs
-- Backend logs include comprehensive error information
-- PDF generation errors are logged but don't crash the system
 
 --- 
