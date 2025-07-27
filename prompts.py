@@ -8,7 +8,6 @@ INTERVIEW_QUESTIONS = [
     "What is the difference between SUM and SUMPRODUCT functions?",
     "How do you use Excel's built-in functions to analyze data?",
     "What is the best way to organize data in Excel?",
-    "How do you create a simple chart in Excel?",
     "What is the best way to use Excel's built-in functions to analyze data?",
     "How do you create a simple chart in Excel?",
 ]
